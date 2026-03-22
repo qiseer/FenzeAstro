@@ -8,4 +8,4 @@ tags: ["Fix", "Bug" , "log"]
 image: "none"
 ---
 
-如果暗色模式
+如果使用暗色模式

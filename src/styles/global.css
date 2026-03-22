@@ -281,7 +281,7 @@ html.dark {
 /* 内容内部容器（控制阅读宽度） */
 .content-container {
     max-width: 80ch;
-    margin: 0 auto;
+    margin: 0px auto 30px auto;
 }
 
 /* 基础排版 */
@@ -404,7 +404,89 @@ html.dark {
 }
 
 
+/* 表格容器 - 支持水平滚动（移动端） */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-sm);
+}
 
+/* 基础表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background-color: var(--color-bg-surface);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+/* 表头样式 */
+thead {
+    background: var(--color-bg-elevated);
+    border-bottom: 2px solid var(--color-border);
+}
+
+th {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
+}
+
+/* 单元格样式 */
+td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+}
+
+/* 最后一行底部边框 */
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* 行悬停效果 */
+tbody tr:hover {
+    background-color: var(--color-bg-elevated);
+    transition: background-color 0.2s ease;
+}
+
+/* 条纹行（可选，默认开启） */
+tbody tr:nth-child(even) {
+    background-color: var(--color-bg-elevated);
+}
+
+/* 如果希望只在悬停时显示条纹效果，可注释上面一行，改为下面这样：
+tbody tr:nth-child(even) {
+  background-color: transparent;
+}
+tbody tr:hover {
+  background-color: var(--color-bg-elevated);
+}
+*/
+
+/* 紧凑表格（用于数据密集场景） */
+.table-compact th,
+.table-compact td {
+    padding: 0.5rem 0.75rem;
+}
+
+/* 边框表格（显式边框） */
+.table-bordered {
+    border: 1px solid var(--color-border);
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid var(--color-border);
+}
+
+.table-bordered thead {
+    border-bottom: none;
+}
 
 
 /* footer 基础样式 */

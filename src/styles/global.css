@@ -1,0 +1,458 @@
+:root {
+    /* 基础背景 */
+    --color-bg: #f8fafc;
+    /* 主背景，柔和灰白 */
+    --color-bg-surface: #ffffff;
+    /* 卡片/弹窗等表层背景 */
+    --color-bg-elevated: #f1f5f954;
+    /* 悬浮或次要区域背景 */
+
+    /* 导航背景（浅色模式） */
+    --color-nav-bg: rgba(255, 255, 255, 0.8);
+    /* 半透白，配合磨砂玻璃效果 */
+    --color-nav-border: var(--color-border);
+    /* 复用全局边框色 */
+    --color-nav-text: var(--color-text-primary);
+    --color-nav-text-hover: var(--color-primary);
+    --color-nav-shadow: var(--shadow-sm);
+
+    /* 文字颜色 */
+    --color-text-primary: #0f172a;
+    /* 主要文字，深灰蓝 */
+    --color-text-secondary: #475569;
+    /* 辅助文字 */
+    --color-text-tertiary: #64748b;
+    /* 更轻的文字，如提示 */
+    --color-text-inverse: #ffffff;
+    /* 深色背景上的文字 */
+
+    /* 边框与分割线 */
+    --color-border: #e2e8f0;
+    --color-border-light: #f1f5f9;
+
+    /* 品牌主色（青绿色调） */
+    --color-primary: #0d9488;
+    /* 主色调，用于按钮、链接等 */
+    --color-primary-hover: #0f766e;
+    --color-primary-light: #99f6e4;
+    /* 浅色背景上的强调背景 */
+
+    /* 辅助色（暖色用于提醒） */
+    --color-accent: #f59e0b;
+    --color-accent-hover: #d97706;
+
+    /* 成功/警告/错误状态 */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+
+    /* 阴影 */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+html.dark {
+    /* 深色背景 */
+    --color-bg: #0f172a;
+    /* 深色主背景 */
+    --color-bg-surface: #1e293b;
+    /* 卡片背景 */
+    --color-bg-elevated: #334155;
+    /* 悬浮层背景 */
+
+    /* 深色模式导航背景 */
+    --color-nav-bg: rgba(15, 23, 42, 0.8);
+    /* 半透深色，与背景融合 */
+    --color-nav-border: var(--color-border);
+    --color-nav-text: var(--color-text-primary);
+    --color-nav-text-hover: var(--color-primary);
+    --color-nav-shadow: var(--shadow-md);
+
+    /* 文字颜色（浅色，高对比） */
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-text-tertiary: #94a3b8;
+    --color-text-inverse: #0f172a;
+
+    /* 边框（稍亮） */
+    --color-border: #334155;
+    --color-border-light: #1e293b;
+
+    /* 主色（保持品牌色，但可稍亮） */
+    --color-primary: #2dd4bf;
+    --color-primary-hover: #5eead4;
+    --color-primary-light: #115e59;
+
+    /* 辅助色 */
+    --color-accent: #fbbf24;
+    --color-accent-hover: #fcd34d;
+
+    /* 状态色（保持，但微调） */
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-error: #f87171;
+
+    /* 阴影（深色下阴影更柔和） */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* 导航栏整体样式（与之前保持一致，增加响应式） */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-nav-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-nav-border);
+    box-shadow: var(--color-nav-shadow);
+}
+
+.nav-container {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+/* 桌面端导航链接 */
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+    color: var(--color-primary);
+}
+
+/* 移动端菜单按钮（默认隐藏） */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 101;
+}
+
+.hamburger,
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--color-text-primary);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.2s;
+}
+
+.hamburger {
+    position: relative;
+}
+
+.hamburger::before {
+    position: absolute;
+    top: -8px;
+    left: 0;
+}
+
+.hamburger::after {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+}
+
+/* 菜单打开时的动画（叉号） */
+.menu-toggle[aria-expanded="true"] .hamburger {
+    background-color: transparent;
+}
+
+.menu-toggle[aria-expanded="true"] .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-toggle[aria-expanded="true"] .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+/* 响应式布局：当宽度小于 768px 时折叠菜单 */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        max-width: 300px;
+        height: 100vh;
+        background: var(--color-bg-surface);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        gap: 2rem;
+        padding: 2rem;
+        transition: right 0.3s ease-in-out;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        border-left: 1px solid var(--color-border);
+        z-index: 100;
+    }
+
+    .nav-links.open {
+        right: 0;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
+        padding: 0.5rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* 添加遮罩层（可选） */
+    .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(2px);
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s;
+    }
+
+    .nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* 更小的屏幕（< 480px）进一步调整 */
+@media (max-width: 480px) {
+    .nav-links {
+        width: 85%;
+    }
+}
+
+
+/* 主要内容容器（通常为 <main>） */
+.main-content {
+    flex: 1;
+    /* 撑开剩余空间，配合 footer 贴底 */
+    padding: 2rem 1rem;
+}
+
+/* 内容内部容器（控制阅读宽度） */
+.content-container {
+    max-width: 80ch;
+    margin: 0 auto;
+}
+
+/* 基础排版 */
+.content-container {
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+.content-container h1,
+.content-container h2,
+.content-container h3 {
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.content-container h1 {
+    font-size: 2rem;
+}
+
+.content-container h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.25rem;
+}
+
+.content-container h3 {
+    font-size: 1.25rem;
+}
+
+.content-container p {
+    margin-bottom: 1.25rem;
+}
+
+/* 链接样式 */
+.content-container a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+}
+
+.content-container a:hover {
+    color: var(--color-primary-hover);
+}
+
+/* 列表 */
+.content-container ul,
+.content-container ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+
+/* 引用块 */
+.content-container blockquote {
+    border-left: 4px solid var(--color-primary);
+    background: var(--color-bg-elevated);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+}
+
+/* 代码块 */
+.content-container pre {
+    background: var(--color-bg-elevated);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.content-container code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875em;
+    background: var(--color-bg-elevated);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+}
+
+/* 图片自适应 */
+.content-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+/* 卡片样式（可用于展示列表或文章预览） */
+.card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .main-content {
+        padding: 1rem;
+    }
+
+    .content-container h1 {
+        font-size: 1.75rem;
+    }
+
+    .content-container h2 {
+        font-size: 1.35rem;
+    }
+}
+
+
+
+
+
+/* footer 基础样式 */
+.site-footer {
+    margin-top: auto;
+    /* 确保 footer 始终在页面底部（当内容不足时） */
+    background: var(--color-bg-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 2rem 1rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+/* 内部容器：与导航和内容区域宽度一致，自动居中 */
+.footer-container {
+    max-width: 80ch;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 版权信息 */
+.footer-copyright {
+    opacity: 0.7;
+}
+
+/* 链接列表 */
+.footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* 暗色模式下微调 */
+html.dark .site-footer {
+    background: var(--color-bg-surface);
+    border-top-color: var(--color-border);
+}

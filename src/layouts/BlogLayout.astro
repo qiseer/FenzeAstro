@@ -1,0 +1,159 @@
+---
+// src/layouts/BlogLayout.astro
+import BaseLayout from "./BaseLayout.astro";
+import { type CollectionEntry } from "astro:content";
+
+export interface Props {
+  entry: CollectionEntry<"blog">;
+}
+
+const { entry } = Astro.props as Props;
+const { data, id, body } = entry;
+const slug = id.replace(/\.(md|mdx)$/, "");
+const { title, description, pubDate, updatedDate, author, tags } = data;
+---
+
+<BaseLayout pageTitle={title}>
+  <article class="blog-post">
+    <header class="post-header">
+      <h1>{title}</h1>
+      <div class="post-meta">
+        <time datetime={pubDate.toISOString()}>
+          {
+            pubDate.toLocaleDateString("zh-CN", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          }
+        </time>
+        {
+          updatedDate && (
+            <span class="updated">
+              更新于{" "}
+              {updatedDate.toLocaleDateString("zh-CN", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+          )
+        }
+        <span class="author">by {author}</span>
+      </div>
+      <div class="tags">
+        {
+          tags.map((tag: any) => (
+            <a href={`/tags/${tag}`} class="tag">
+              {tag}
+            </a>
+          ))
+        }
+      </div>
+      {description && <p class="description">{description}</p>}
+    </header>
+    <div class="post-content">
+      <!-- 渲染 Markdown 内容 -->
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0.5rem 0;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--color-bg-elevated);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .tag:hover {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+  .description {
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+
+  .post-content {
+    line-height: 1.6;
+  }
+
+  /* 文章内容样式继承全局排版 */
+  .post-content h1,
+  .post-content h2,
+  .post-content h3 {
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+  }
+
+  .post-content p {
+    margin-bottom: 1.25rem;
+  }
+
+  .post-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .post-content pre {
+    background: var(--color-bg-elevated);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .post-content code {
+    font-family: "Fira Code", monospace;
+    background: var(--color-bg-elevated);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+
+  .post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+</style>

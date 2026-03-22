@@ -1,0 +1,93 @@
+---
+// src/pages/tags/[tag].astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout pageTitle={`标签：${tag}`}>
+  <div class="tag-container">
+    <h1>#{tag}</h1>
+    <p class="tag-count">共 {posts.length} 篇文章</p>
+
+    <div class="posts-list">
+      {
+        posts.map((post) => (
+          <article class="tag-post-item">
+            <a href={`/blog/${post.id}/`} class="tag-post-title">
+              {post.data.title}
+            </a>
+            <time>{post.data.pubDate.toLocaleDateString("zh-CN")}</time>
+          </article>
+        ))
+      }
+    </div>
+
+    <a href="/archive" class="back-link">← 返回归档</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .tag-container {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  h1 {
+    text-align: center;
+    color: var(--color-primary);
+  }
+  .tag-count {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+  }
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .tag-post-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--color-bg-surface);
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border);
+  }
+  .tag-post-title {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .tag-post-title:hover {
+    color: var(--color-primary);
+  }
+  time {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--color-primary);
+  }
+</style>

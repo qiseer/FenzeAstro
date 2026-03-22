@@ -1,0 +1,36 @@
+---
+import { LoadTheme } from "@yarso/astro-theme-toggler";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+const { pageTitle } = Astro.props;
+---
+
+<html>
+  <head>
+    <LoadTheme />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="loreshux@gmail.com" />
+    <meta name="generator" content="vscode" />
+    <link rel="icon" href="/logo.png" type="image/png" />
+    <title>{pageTitle}</title>
+    <style>
+      body {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 80ch;
+        padding: 1rem 1rem 3rem;
+        line-height: 1.5;
+        background-color: var(--color-bg);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main" class="main-content">
+      <Header />
+      <div class="content-container"><slot /></div>
+      <Footer />
+    </div>
+  </body>
+</html>

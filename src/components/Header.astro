@@ -1,0 +1,209 @@
+<header class="site-header">
+  <div class="nav-container">
+    <div class="logo">
+      <a href="/">FenzeBlogs</a>
+    </div>
+    <button class="menu-toggle" aria-label="菜单" aria-expanded="false">
+      <span class="hamburger"></span>
+    </button>
+    <nav class="nav-links">
+      <a href="/">首页</a>
+      <a href="/about">关于</a>
+      <a href="/blog">博客</a>
+    </nav>
+    <!-- 暗色模式切换按钮 -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="切换暗色模式">
+      <svg
+        class="sun-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <svg
+        class="moon-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  * {
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.2s ease;
+  }
+  /* 主题切换按钮样式 */
+  .theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition:
+      background-color 0.3s,
+      transform 0.2s;
+    color: var(--color-text-secondary);
+  }
+
+  .theme-toggle:hover {
+    background-color: var(--color-bg-elevated);
+    transform: scale(1.05);
+  }
+
+  .theme-toggle svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition:
+      opacity 0.3s,
+      transform 0.2s;
+  }
+
+  /* 默认显示太阳图标（浅色模式），月亮图标隐藏 */
+  .sun-icon {
+    display: block;
+  }
+  .moon-icon {
+    display: none;
+  }
+
+  /* 暗色模式下显示月亮图标，隐藏太阳图标 */
+  html.dark .sun-icon {
+    display: none;
+  }
+  html.dark .moon-icon {
+    display: block;
+  }
+
+  /* 移动端调整 */
+  @media (max-width: 768px) {
+    .theme-toggle {
+      position: absolute;
+      right: 4rem;
+      top: 0.75rem;
+    }
+    /* 确保在菜单打开时按钮不被遮挡 */
+    .nav-links.open + .theme-toggle {
+      z-index: 102;
+    }
+  }
+</style>
+<script>
+  (function () {
+    const themeToggle = document.getElementById("theme-toggle");
+    if (!themeToggle) return;
+
+    // 获取当前主题（从 localStorage 或系统偏好）
+    const getCurrentTheme = () => {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme) return savedTheme;
+      // 检测系统偏好
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    };
+
+    // 应用主题
+    const applyTheme = (theme: string) => {
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+      localStorage.setItem("theme", theme);
+    };
+
+    // 初始化主题
+    const initialTheme = getCurrentTheme();
+    applyTheme(initialTheme);
+
+    // 切换主题
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.contains("dark");
+      const newTheme = isDark ? "light" : "dark";
+      applyTheme(newTheme);
+    });
+
+    // 监听系统主题变化（可选）
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        // 只有当用户没有手动设置时才自动跟随系统
+        if (!localStorage.getItem("theme")) {
+          applyTheme(e.matches ? "dark" : "light");
+        }
+      });
+  })();
+</script>
+<script>
+  const toggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector(".nav-links");
+  let overlay: HTMLDivElement | null = null;
+
+  // 创建遮罩元素
+  const createOverlay = () => {
+    overlay = document.createElement("div");
+    overlay.className = "nav-overlay";
+    document.body.appendChild(overlay);
+    overlay.addEventListener("click", closeMenu);
+  };
+
+  const openMenu = () => {
+    if (!overlay) return;
+    toggle?.setAttribute("aria-expanded", "true");
+    nav?.classList.add("open");
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden"; // 禁止背景滚动
+  };
+
+  const closeMenu = () => {
+    if (!overlay) return;
+    toggle?.setAttribute("aria-expanded", "false");
+    nav?.classList.remove("open");
+    overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  };
+  toggle?.addEventListener("click", () => {
+    const expanded = toggle.getAttribute("aria-expanded") === "true";
+    if (expanded) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // 窗口大小改变时，如果菜单是打开状态且窗口变大，自动关闭并重置样式
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768 && nav?.classList.contains("open")) {
+      closeMenu();
+    }
+  });
+
+  createOverlay();
+</script>

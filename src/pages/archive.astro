@@ -1,0 +1,195 @@
+---
+// src/pages/archive.astro
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const allPosts = await getCollection("blog");
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// 按年份分组
+const postsByYear = sortedPosts.reduce((acc: any, post) => {
+  const year = post.data.pubDate.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {});
+
+// 按年份降序排列
+const years = Object.keys(postsByYear).sort((a: any, b: any) => b - a);
+---
+
+<BaseLayout pageTitle="文章归档">
+  <div class="archive-container">
+    <h1>文章归档</h1>
+
+    <div class="archive-stats">
+      共 <strong>{sortedPosts.length}</strong> 篇文章，横跨 <strong
+        >{years.length}</strong
+      > 年
+    </div>
+
+    <div class="timeline">
+      {
+        years.map((year) => (
+          <section class="year-section">
+            <h2 class="year-title">{year}</h2>
+            <div class="year-posts">
+              {postsByYear[year].map((post: any) => (
+                <article class="archive-item">
+                  <time
+                    class="post-date"
+                    datetime={post.data.pubDate.toISOString()}
+                  >
+                    {post.data.pubDate.toLocaleDateString("zh-CN", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <div class="post-info">
+                    <a href={`/blog/${post.id}/`} class="post-title">
+                      {post.data.title}
+                    </a>
+                    <div class="post-meta-inline">
+                      <span>{post.data.author}</span>
+                      {post.data.tags.length > 0 && (
+                        <span class="inline-tags">
+                          {post.data.tags.slice(0, 2).map((tag: any) => (
+                            <span class="mini-tag">{tag}</span>
+                          ))}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .archive-container {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+  }
+
+  .archive-stats {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 3rem;
+    font-size: 0.875rem;
+  }
+
+  .archive-stats strong {
+    color: var(--color-primary);
+  }
+
+  .timeline {
+    position: relative;
+  }
+
+  .year-section {
+    margin-bottom: 3rem;
+  }
+
+  .year-title {
+    font-size: 1.75rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .year-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .archive-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    transition: all 0.2s;
+  }
+
+  .archive-item:hover {
+    transform: translateX(8px);
+    border-color: var(--color-primary);
+  }
+
+  .post-date {
+    flex-shrink: 0;
+    width: 4rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .post-info {
+    flex: 1;
+  }
+
+  .post-title {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s;
+  }
+
+  .post-title:hover {
+    color: var(--color-primary);
+  }
+
+  .post-meta-inline {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .inline-tags {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .mini-tag {
+    background: var(--color-bg-elevated);
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  @media (max-width: 640px) {
+    .archive-item {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .post-date {
+      width: auto;
+      font-size: 0.75rem;
+    }
+    .post-title {
+      font-size: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+// src/pages/blog/[...id].astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  console.log(posts.map((p: any) => p.id)); // 查看所有 id
+  return posts.map((post: any) => ({
+    params: { slug: post.id },
+    props: { entry: post },
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"blog"> };
+// 如果找不到文章，返回 404
+if (!entry) {
+  return Astro.redirect("/404");
+}
+const { Content } = await render(entry);
+---
+
+<BaseLayout pageTitle={entry.data.title}>
+  <article>
+    <h1>{entry.data.title}</h1>
+    <div class="content">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

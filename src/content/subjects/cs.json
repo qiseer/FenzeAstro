@@ -1,0 +1,10 @@
+{
+  "name": "计算机科学",
+  "description": "算法、数据结构与编程艺术。",
+  "icon": "💻",
+  "theme": {
+    "primary": "#8b5cf6",
+    "accent": "#a78bfa"
+  },
+  "slug": "cs"
+}

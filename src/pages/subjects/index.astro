@@ -1,0 +1,120 @@
+---
+// src/pages/subjects/index.astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const subjects = await getCollection("subjects");
+---
+
+<BaseLayout pageTitle="所有专栏">
+  <div class="subjects-index">
+    <h1>📚 学习专栏</h1>
+    <p class="subtitle">选择科目，开始复习之旅</p>
+
+    <div class="subjects-grid">
+      {
+        subjects.map((subject) => {
+          const data = subject.data;
+          return (
+            <a
+              href={`/subjects/${data.slug || subject.id}`}
+              class="subject-card"
+              style={`--subject-primary: ${data.theme.primary}; --subject-accent: ${data.theme.accent}`}
+            >
+              <div class="subject-icon">{data.icon}</div>
+              <h2>{data.name}</h2>
+              <p>{data.description}</p>
+              <span class="explore-link">查看专栏 →</span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .subjects-index {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 3rem;
+  }
+
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .subject-card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: all 0.2s;
+  }
+
+  .subject-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--subject-primary);
+    box-shadow: var(--shadow-md);
+  }
+
+  .subject-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .subject-card h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+
+  .subject-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .explore-link {
+    display: inline-block;
+    color: var(--subject-primary);
+    font-weight: 500;
+    transition: transform 0.2s;
+  }
+
+  .subject-card:hover .explore-link {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 640px) {
+    .subjects-index {
+      padding: 1rem;
+    }
+    .subjects-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .subject-card {
+      padding: 1.5rem;
+    }
+    .subject-card h2 {
+      font-size: 1.25rem;
+    }
+  }
+</style>

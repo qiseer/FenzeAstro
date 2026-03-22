@@ -1,0 +1,258 @@
+---
+// src/pages/subjects/[slug].astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const subjects = await getCollection("subjects");
+  return subjects.map((subject) => ({
+    params: { slug: subject.data.slug || subject.id },
+    props: { subject: subject.data },
+  }));
+}
+
+const { subject } = Astro.props;
+// 获取该科目下的所有文章
+const allPosts = await getCollection("blog");
+const posts = allPosts
+  .filter((post) => post.data.subject === (subject.slug || subject.name))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// 动态注入主题色 CSS 变量
+const themeStyle = `
+  :root {
+    --subject-primary: ${subject.theme.primary};
+    --subject-accent: ${subject.theme.accent};
+  }
+`;
+---
+
+<BaseLayout pageTitle={`${subject.name}专栏`}>
+  <style set:html={themeStyle}></style>
+  <div class="subject-container">
+    <!-- 科目头部 -->
+    <div
+      class="subject-header"
+      style="border-bottom-color: var(--subject-primary)"
+    >
+      <div class="subject-icon">{subject.icon}</div>
+      <h1>{subject.name}专栏</h1>
+      <p class="subject-description">{subject.description}</p>
+    </div>
+
+    <!-- 文章列表 -->
+    <div class="posts-grid">
+      {
+        posts.map((post) => (
+          <article class="post-card">
+            {post.data.image !== "none" && (
+              <a href={`/blog/${post.id}`} class="post-image-link">
+                <img
+                  src={post.data.image}
+                  alt={post.data.title}
+                  class="post-image"
+                />
+              </a>
+            )}
+            <div class="post-card-content">
+              <h2>
+                <a href={`/blog/${post.id}`}>{post.data.title}</a>
+              </h2>
+              <div class="post-meta">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString("zh-CN", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <span>·</span>
+                <span>{post.data.author}</span>
+              </div>
+              {post.data.description && (
+                <p class="post-description">{post.data.description}</p>
+              )}
+              <div class="tags">
+                {post.data.tags.slice(0, 3).map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              <a href={`/blog/${post.id}`} class="read-more">
+                阅读全文 →
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    {
+      posts.length === 0 && (
+        <div class="no-posts">
+          <p>暂无复习文章，敬请期待。</p>
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .subject-container {
+    max-width: 80ch;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .subject-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid;
+    border-bottom-color: var(--subject-primary);
+  }
+
+  .subject-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .subject-description {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* 文章卡片样式（复用之前样式，但使用主题色） */
+  .posts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .post-card {
+    background: var(--color-bg-surface);
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .post-image-link {
+    display: block;
+    overflow: hidden;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .post-card:hover .post-image {
+    transform: scale(1.02);
+  }
+
+  .post-card-content {
+    padding: 1.5rem;
+  }
+
+  .post-card h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+  }
+
+  .post-card h2 a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .post-card h2 a:hover {
+    color: var(--subject-primary);
+  }
+
+  .post-meta {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .post-description {
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .tag {
+    background: var(--color-bg-elevated);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .read-more {
+    display: inline-block;
+    color: var(--subject-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s;
+  }
+
+  .read-more:hover {
+    transform: translateX(4px);
+  }
+
+  .no-posts {
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 640px) {
+    .subject-container {
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    .subject-icon {
+      font-size: 3rem;
+    }
+    .post-card-content {
+      padding: 1rem;
+    }
+    .post-card h2 {
+      font-size: 1.25rem;
+    }
+    .post-image {
+      height: 150px;
+    }
+  }
+</style>

@@ -1,0 +1,394 @@
+---
+// src/pages/columns/computer-organization.astro
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// 假设文章内容集合中按专栏分类，这里手动筛选或直接硬编码示例
+// 如果使用内容集合，可以这样获取：
+// const allPosts = await getCollection('blog');
+// const posts = allPosts.filter(post => post.data.column === 'computer-organization');
+
+// 为展示方便，此处手动定义几篇复习文章
+const articles = [
+  {
+    title: "计算机组成原理概述",
+    excerpt: "计算机的基本组成、冯·诺依曼体系结构、计算机层次结构。",
+    date: "2025-03-20",
+    readTime: "8分钟",
+    tags: ["基础", "架构"],
+    slug: "computer-organization-overview",
+  },
+  {
+    title: "数据的表示与运算",
+    excerpt: "数制转换、定点数与浮点数、原码/反码/补码、ALU设计。",
+    date: "2025-03-18",
+    readTime: "12分钟",
+    tags: ["数据表示", "运算器"],
+    slug: "data-representation",
+  },
+  {
+    title: "存储系统：Cache与内存",
+    excerpt: "存储器层次结构、Cache映射与替换策略、虚拟存储器。",
+    date: "2025-03-15",
+    readTime: "15分钟",
+    tags: ["存储系统", "Cache"],
+    slug: "memory-system",
+  },
+  {
+    title: "指令系统与CPU设计",
+    excerpt: "指令格式、寻址方式、数据通路、控制器设计。",
+    date: "2025-03-10",
+    readTime: "20分钟",
+    tags: ["指令系统", "CPU"],
+    slug: "instruction-set",
+  },
+  {
+    title: "输入输出系统",
+    excerpt: "I/O接口、中断、DMA、总线结构。",
+    date: "2025-03-05",
+    readTime: "10分钟",
+    tags: ["I/O", "总线"],
+    slug: "io-system",
+  },
+];
+---
+
+<BaseLayout pageTitle="计算机组成原理复习专栏">
+  <div class="column-container">
+    <!-- 专栏头部：带有科技感装饰 -->
+    <div class="column-header">
+      <div class="header-content">
+        <div class="icon-wrapper">
+          <svg
+            class="chip-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="4"
+              y="4"
+              width="16"
+              height="16"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="1.5"></rect>
+            <path
+              d="M8 2V4M16 2V4M8 20V22M16 20V22M2 8H4M2 16H4M20 8H22M20 16H22"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"></path>
+            <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+            <path
+              d="M12 6V8M12 16V18M6 12H8M16 12H18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <h1>计算机组成原理复习专栏</h1>
+        <p class="column-desc">
+          深入理解计算机硬件系统的构成与工作原理，从数据表示到指令执行，构建坚实的计算机体系结构知识体系。
+        </p>
+        <div class="column-stats">
+          <span>📚 共 {articles.length} 篇文章</span>
+          <span>⚡ 持续更新中</span>
+        </div>
+      </div>
+      <div class="header-bg-pattern"></div>
+    </div>
+
+    <!-- 文章列表：网格卡片布局 -->
+    <div class="articles-grid">
+      {
+        articles.map((article) => (
+          <a
+            href={`/columns/computer-organization/${article.slug}`}
+            class="article-card"
+          >
+            <div class="card-header">
+              <div class="card-tags">
+                {article.tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+              <h2 class="card-title">{article.title}</h2>
+            </div>
+            <p class="card-excerpt">{article.excerpt}</p>
+            <div class="card-footer">
+              <time datetime={article.date}>{article.date}</time>
+              <span class="read-time">📖 {article.readTime}</span>
+            </div>
+            <div class="card-hover-effect" />
+          </a>
+        ))
+      }
+    </div>
+
+    <!-- 学习路线提示（可选） -->
+    <div class="study-tip">
+      <div class="tip-icon">💡</div>
+      <div class="tip-text">
+        <strong>学习建议：</strong> 按顺序阅读，结合课后习题和实验，效果更佳。
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .column-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    position: relative;
+  }
+
+  /* 专栏头部 - 科技感设计 */
+  .column-header {
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      var(--color-bg-surface),
+      var(--color-bg-elevated)
+    );
+    border-radius: 2rem;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .icon-wrapper {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    background: var(--color-bg-surface);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 15px rgba(13, 148, 136, 0.3);
+  }
+
+  .chip-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--color-primary);
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    margin: 0 0 0.5rem;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-accent)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .column-desc {
+    font-size: 1.1rem;
+    color: var(--color-text-secondary);
+    max-width: 700px;
+    margin: 0 auto 1rem;
+    line-height: 1.5;
+  }
+
+  .column-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.9rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .header-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+      circle at 20% 30%,
+      rgba(13, 148, 136, 0.1) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 文章网格 */
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .article-card {
+    position: relative;
+    background: var(--color-bg-surface);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--color-border);
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .article-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-header {
+    margin-bottom: 1rem;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag {
+    background: var(--color-bg-elevated);
+    padding: 0.2rem 0.7rem;
+    border-radius: 1rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+  }
+
+  .article-card:hover .tag {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+
+  .card-excerpt {
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 1rem 0;
+    flex-grow: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
+    margin-top: auto;
+  }
+
+  .card-hover-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(13, 148, 136, 0.03),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .article-card:hover .card-hover-effect {
+    opacity: 1;
+  }
+
+  /* 学习提示 */
+  .study-tip {
+    background: var(--color-bg-surface);
+    border-left: 4px solid var(--color-primary);
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .tip-icon {
+    font-size: 1.5rem;
+  }
+
+  .tip-text {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .tip-text strong {
+    color: var(--color-text-primary);
+  }
+
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .column-container {
+      padding: 1rem;
+    }
+    .column-header {
+      padding: 1.5rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+    }
+    .column-desc {
+      font-size: 1rem;
+    }
+    .articles-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .card-title {
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .icon-wrapper {
+      width: 60px;
+      height: 60px;
+    }
+    .chip-icon {
+      width: 36px;
+      height: 36px;
+    }
+    .column-stats {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

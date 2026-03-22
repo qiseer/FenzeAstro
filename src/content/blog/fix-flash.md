@@ -14,7 +14,7 @@ image: "none"
 
 闪烁发生在两个场景：
 1. 初始加载：浏览器先渲染默认（通常是亮色）主题，然后 JavaScript 执行后才切换到暗色主题
-2. View Transitions 跳转：使用 <ClientRouter /> 时，页面切换过程中样式重新计算导致闪烁
+2. View Transitions 跳转：使用 `<ClientRouter />` 时，页面切换过程中样式重新计算导致闪烁
 
 **解决方案**
 
@@ -52,7 +52,7 @@ import ThemeScript from './ThemeScript.astro';
 
 ### 2
 处理 View Transitions 跳转闪烁  
-如果使用了 <ClientRouter />，需要在页面切换后重新应用主题：
+如果使用了 `<ClientRouter />`，需要在页面切换后重新应用主题：
 ```astro
 <script is:inline>
   function applyTheme() {
@@ -98,7 +98,7 @@ import { LoadTheme, ThemeToggler } from '@yarso/astro-theme-toggler';
 
 这个代码能解决闪烁问题，核心在于它在浏览器首次绘制（First Paint）之前就同步执行了主题设置。  
 - 浏览器解析 HTML 是从上到下的  
-- <script> 在 <head> 中时，会阻塞后续 DOM 的渲染  
+- `<script> 在 <head> 中时，会阻塞后续 DOM 的渲染  `
 - CSS 和页面内容还没绘制，主题就已经设置好了  
 
 也就是说，增加了上面的代码后，此时顺序为：

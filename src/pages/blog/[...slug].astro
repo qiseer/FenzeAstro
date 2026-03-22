@@ -5,7 +5,6 @@ import { getCollection, render, type CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
-  console.log(posts.map((p: any) => p.id)); // 查看所有 id
   return posts.map((post: any) => ({
     params: { slug: post.id },
     props: { entry: post },

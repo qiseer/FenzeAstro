@@ -3,8 +3,5 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://fenze.acmeblue.cn",
-    redirects: {
-        '/blog': "/blog/1"
-    }
+    site: "https://fenze.acmeblue.cn"
 });

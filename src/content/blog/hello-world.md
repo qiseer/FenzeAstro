@@ -19,5 +19,8 @@ subject: ""
 - 支持多种 UI 框架
 - 内容优先
 
+[点击](./math)
+
 ```javascript
 console.log("Hello Astro!");
+```

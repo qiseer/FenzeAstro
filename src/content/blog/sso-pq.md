@@ -2,7 +2,7 @@
 title: "PostgreSQL 架构设计与 SSO 实践指南"
 description: "打造企业级统一用户中心：PostgreSQL 架构设计与 SSO 漫游指南"
 pubDate: 2026-04-02
-author: "Fenze"
+author: "Qiseer"
 tags: ["数据库", "postgresql","SSO"]
 subject: "database"
 image: "none"

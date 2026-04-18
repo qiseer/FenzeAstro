@@ -3,7 +3,7 @@ title: "Hello World"
 description: "这是我的第一篇博客文章"
 pubDate: 2026-03-22
 updatedDate: 2026-03-22
-author: "Fenze"
+author: "Qiseer"
 tags: ["Astro", "博客"]
 image: "none"
 subject: ""

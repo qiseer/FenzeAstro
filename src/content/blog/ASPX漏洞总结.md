@@ -4,7 +4,7 @@ title: "ASPX (.NET) 安全漏洞总结"
 description: ""
 pubDate: 2026-04-03
 updatedDate: 2026-04-03
-author: "Fenze"
+author: "Qiseer"
 tags: ["ASPX", ".net" , "漏洞"]
 image: "none"
 subject: ""
